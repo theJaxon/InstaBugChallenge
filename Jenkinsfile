@@ -1,26 +1,3 @@
-# InstaBugChallenge
-
-### Dockerfile:
-```Dockerfile
-FROM node:slim
-RUN apt-get update &&  apt-get install -y \
-    libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb git && \
-    apt-get clean && \
-    git clone https://github.com/dobromir-hristov/todo-app && \
-    cd todo-app && \
-    yarn install
-
-WORKDIR /todo-app/
-
-ENV PORT=4222
-ENV CYPRESS_BASE_URL=http://localhost:4222
-ENV DEBUG=cypress:*
-
-ENTRYPOINT [ "yarn" ]
-```
-
-### Jenkinsfile:
-```Groovy
 pipeline 
 {
     agent any
@@ -62,20 +39,3 @@ pipeline
         
     }
 }
-```
-
----
-
-### Issues:
-1. Initially using `node:alpine` image resulted in e2e tests failure (missing xvfb and even aftar `apk add` xvfb still it gives errors)
-Switching to `node:slim` instead and running e2e tests hangs indefinitely as shown 
-![]()
-
-![]()
-
-so ~~e2e~~ was skipped!
-
-2. copying build artifacts `/test-app/dist` most of the time it shows that there's a lock problem
-ERROR  Error: EBUSY: resource busy or locked, rmdir '/todo-app/dist' and proceeds to remove the build directory
-
-~[]()
